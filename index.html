@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>全國天氣預報網</title>
+</head>
+<body>
+    <div>
+    <input type="text" placeholder="尋找城市" >
+    </div>
+    <div class="cards-container" >
+        <!-- 宜蘭 -->
+        <div class="cards" >
+            <div id="cityName" class="city">
+                <p ></p>
+            </div>  
+            <div id="MaxT">
+                <p></p>
+            </div>
+        </div>
+         <!-- 基隆-->
+        <!-- 台北 -->
+
+        <!-- 新北 -->
+
+        
+        <!-- 桃園 -->
+
+        <!-- 新竹 -->
+
+         <!-- 新竹 -->
+
+        <!-- 苗栗縣 -->
+
+        <!-- 臺中市 -->
+         <!-- 南投縣 -->
+        <!-- 彰化縣 -->
+
+        <!-- 雲林縣 -->
+
+        
+        <!-- 嘉義市 -->
+
+        <!-- 臺南市 -->
+
+         <!-- 高雄市 -->
+
+        <!-- 屏東縣 -->
+
+        <!-- 花蓮縣 -->
+
+        
+        <!-- 臺東縣 -->
+
+        <!-- 澎湖縣 -->
+
+         <!-- 金門縣 -->
+
+        <!-- 連江縣 -->
+
+    </div>
+</body>
+<script>
+  function fetchData(apiUrl, cityNameId, wxItemId,MaxTId,MinTId,PoPId,CIId) {
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const location = data.records.location[0];
+                    const weatherElements = location.weatherElement;
+                    // 縣市名稱
+                    const cityNameElement = document.getElementById(cityNameId);
+                    if (cityNameElement) {
+                        cityNameElement.querySelector('p').textContent = data.records.location[0].locationName;
+                    } else {
+                        console.error(`Element with id "${cityNameId}" not found.`);
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        const Yilan = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%AE%9C%E8%98%AD%E7%B8%A3&elementName=';
+        fetchData(Yilan, 'cityName', 'MaxT');
+
+      
+
+</script>
+</html>
