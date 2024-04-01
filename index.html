@@ -13,12 +13,11 @@
     <div class="cards-container" >
         <!-- 宜蘭 -->
         <div class="cards" >
-            <div id="cityName" class="city">
-                <p ></p>
-            </div>  
-            <div id="MaxT">
-                <p></p>
-            </div>
+            <div id="cityName" class="city"></div>  
+            <div id="MaxT"></div>
+            <div id="MinT"></div>
+            <div id="PoP"></div>
+            <div id="CI"></div>
         </div>
          <!-- 基隆-->
         <!-- 台北 -->
@@ -63,8 +62,9 @@
     </div>
 </body>
 <script>
-  function fetchData(apiUrl, cityNameId, wxItemId,MaxTId,MinTId,PoPId,CIId) {
-            fetch(apiUrl)
+        const Yilan = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%AE%9C%E8%98%AD%E7%B8%A3&elementName=';
+
+            fetch(Yilan)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -72,23 +72,23 @@
                     return response.json();
                 })
                 .then(data => {
-                    const location = data.records.location[0];
-                    const weatherElements = location.weatherElement;
                     // 縣市名稱
-                    const cityNameElement = document.getElementById(cityNameId);
-                    if (cityNameElement) {
-                        cityNameElement.querySelector('p').textContent = data.records.location[0].locationName;
-                    } else {
-                        console.error(`Element with id "${cityNameId}" not found.`);
-                    }
-                })
+                        document.getElementById('cityName').innerText= data.records.location[0].locationName;
+                        const maxTData = data.records.location[0].weatherElement.find(element => element.elementName === "MaxT");                    
+                        document.getElementById('MaxT').innerText = maxTData.time[0].parameter.parameterName;
+                        const minTData = data.records.location[0].weatherElement.find(element => element.elementName === "MinT");                    
+                        document.getElementById('MinT').innerText = minTData.time[0].parameter.parameterName;
+                        const PoPData = data.records.location[0].weatherElement.find(element => element.elementName === "PoP");
+                        document.getElementById('PoP').innerText = PoPData.time[0].parameter.parameterName;
+                        const CIData = data.records.location[0].weatherElement.find(element => element.elementName === "CI");
+                        document.getElementById('CI').innerText = CIData.time[0].parameter.parameterName;
+                    })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
                 });
-        }
+     
 
-        const Yilan = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%AE%9C%E8%98%AD%E7%B8%A3&elementName=';
-        fetchData(Yilan, 'cityName', 'MaxT');
+
 
       
 
