@@ -8,89 +8,136 @@
 </head>
 <body>
     <div>
-    <input type="text" placeholder="尋找城市" >
+        <input type="text" placeholder="尋找城市">
     </div>
-    <div class="cards-container" >
+    <div class="cards-container">
         <!-- 宜蘭 -->
-        <div class="cards" >
-            <div id="cityName" class="city"></div>  
-            <div id="MaxT"></div>
-            <div id="MinT"></div>
-            <div id="PoP"></div>
-            <div id="CI"></div>
-        </div>
-         <!-- 基隆-->
+        <div class="cards" id="Yilan"></div>
+        <!-- 基隆 -->
+        <div class="cards" id="Keelung"></div>
         <!-- 台北 -->
-
+        <div class="cards" id="Taipei"></div>
         <!-- 新北 -->
-
-        
-        <!-- 桃園 -->
-
+        <div class="cards" id="NewTaipei"></div>
+         <!-- 桃園 -->
+         <div class="cards" id="Taoyuan"></div>
         <!-- 新竹 -->
+        <div class="cards" id="Hsinchu"></div>
+         <!-- 苗栗 -->
+         <div class="cards" id="Miaoli"></div>
+         <!-- 台中 -->
+         <div class="cards" id="Taichung"></div>
+         <!-- 彰化 -->
+         <div class="cards" id="Changhua"></div>
+        <!-- 彰化 -->
+        <div class="cards" id="Nantou"></div>
+        <!-- 雲林 -->
+        <div class="cards" id="Yunlin"></div>
+        <!-- 嘉義 -->
+        <div class="cards" id="Chiayi"></div>
+        <!-- 台南 -->
+        <div class="cards" id="Tainan"></div>
+        <!-- 高雄 -->
+        <div class="cards" id="Kaohsiung"></div>
+        <!-- 屏東 -->
+        <div class="cards" id="Pingtung"></div>
+        <!-- 花蓮 -->
+        <div class="cards" id="Hualien"></div>
+        <!-- 台東 -->
+        <div class="cards" id="Taitung"></div>
+        <!-- 澎湖 -->
+        <div class="cards" id="Penghu"></div>
+        <!-- 金門 -->
+        <div class="cards" id="kinmen"></div>
+        <!-- 連江 -->
+        <div class="cards" id="Mazu"></div>
 
-         <!-- 新竹 -->
-
-        <!-- 苗栗縣 -->
-
-        <!-- 臺中市 -->
-         <!-- 南投縣 -->
-        <!-- 彰化縣 -->
-
-        <!-- 雲林縣 -->
-
-        
-        <!-- 嘉義市 -->
-
-        <!-- 臺南市 -->
-
-         <!-- 高雄市 -->
-
-        <!-- 屏東縣 -->
-
-        <!-- 花蓮縣 -->
-
-        
-        <!-- 臺東縣 -->
-
-        <!-- 澎湖縣 -->
-
-         <!-- 金門縣 -->
-
-        <!-- 連江縣 -->
-
+        <!-- 其他縣市以此類推 -->
     </div>
 </body>
 <script>
-        const Yilan = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%AE%9C%E8%98%AD%E7%B8%A3&elementName=';
+    const fetchWeatherData = (api, targetElementId) => {
+        fetch(api)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const cityElement = document.getElementById(targetElementId);
+                const cityName = data.records.location[0].locationName;
+                cityElement.innerHTML = `
+                    <div class="city">${cityName}</div>
+                    <div class="today_T">今日溫度: ${data.records.location[0].weatherElement.find(element => element.elementName === "MaxT").time[0].parameter.parameterName}°C</div>
+                    <div class="today_INF">${data.records.location[0].weatherElement.find(element => element.elementName === "PoP").time[0].parameter.parameterName}</div>
+                    <div class="today_INF">${data.records.location[0].weatherElement.find(element => element.elementName === "CI").time[0].parameter.parameterName}</div>
+                `;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    };
 
-            fetch(Yilan)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // 縣市名稱
-                        document.getElementById('cityName').innerText= data.records.location[0].locationName;
-                        const maxTData = data.records.location[0].weatherElement.find(element => element.elementName === "MaxT");                    
-                        document.getElementById('MaxT').innerText = maxTData.time[0].parameter.parameterName;
-                        const minTData = data.records.location[0].weatherElement.find(element => element.elementName === "MinT");                    
-                        document.getElementById('MinT').innerText = minTData.time[0].parameter.parameterName;
-                        const PoPData = data.records.location[0].weatherElement.find(element => element.elementName === "PoP");
-                        document.getElementById('PoP').innerText = PoPData.time[0].parameter.parameterName;
-                        const CIData = data.records.location[0].weatherElement.find(element => element.elementName === "CI");
-                        document.getElementById('CI').innerText = CIData.time[0].parameter.parameterName;
-                    })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-     
-
-
-
-      
-
+    // 宜蘭 API
+    const YilanAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%AE%9C%E8%98%AD%E7%B8%A3';
+    fetchWeatherData(YilanAPI, 'Yilan');
+    // 基隆 API
+    const KeelungAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%9F%BA%E9%9A%86%E5%B8%82';
+    fetchWeatherData(KeelungAPI, 'Keelung');
+    // 台北 API
+    const TaipeiAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E8%87%BA%E5%8C%97%E5%B8%82';
+    fetchWeatherData(TaipeiAPI, 'Taipei');
+    // 新北 API
+    const NewTaipeiAPI  = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E6%96%B0%E5%8C%97%E5%B8%82';
+    fetchWeatherData(NewTaipeiAPI, 'NewTaipei');
+    // 桃園 API
+    const TaoyuanAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E6%A1%83%E5%9C%92%E5%B8%82';
+    fetchWeatherData(TaoyuanAPI, 'Taoyuan');
+    //新竹 API
+    const HsinchuAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E6%96%B0%E7%AB%B9%E5%B8%82';
+    fetchWeatherData(HsinchuAPI, 'Hsinchu');
+    //苗栗 API
+    const MiaoliAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E8%8B%97%E6%A0%97%E7%B8%A3';
+    fetchWeatherData(MiaoliAPI, 'Miaoli');
+    //台中 API
+    const TaichungAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E8%87%BA%E4%B8%AD%E5%B8%82';
+    fetchWeatherData(TaichungAPI, 'Taichung');
+    //彰化 API
+    const ChanghuaAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%BD%B0%E5%8C%96%E7%B8%A3';
+    fetchWeatherData(ChanghuaAPI, 'Changhua');
+    //南投 API
+    const NantouAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%8D%97%E6%8A%95%E7%B8%A3';
+    fetchWeatherData(NantouAPI, 'Nantou');
+    //雲林 API
+    const YunlinAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E9%9B%B2%E6%9E%97%E7%B8%A3';
+    fetchWeatherData(YunlinAPI, 'Yunlin');
+    //嘉義 API
+    const ChiayiAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%98%89%E7%BE%A9%E7%B8%A3';
+    fetchWeatherData(ChiayiAPI, 'Chiayi');
+    //台南 API
+    const TainanAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E8%87%BA%E5%8D%97%E5%B8%82';
+    fetchWeatherData(TainanAPI, 'Tainan');
+    //高雄 API
+    const KaohsiungAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E9%AB%98%E9%9B%84%E5%B8%82';
+    fetchWeatherData(KaohsiungAPI, 'Kaohsiung');
+    //屏東 API
+    const PingtungAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E5%B1%8F%E6%9D%B1%E7%B8%A3';
+    fetchWeatherData(PingtungAPI, 'Pingtung');
+    //花蓮 API
+    const HualienAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E8%8A%B1%E8%93%AE%E7%B8%A3';
+    fetchWeatherData(HualienAPI, 'Hualien');
+    //台東 API
+    const TaitungAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E8%87%BA%E6%9D%B1%E7%B8%A3';
+    fetchWeatherData(TaitungAPI, 'Taitung');
+    //澎湖 API
+    const PenghuAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E6%BE%8E%E6%B9%96%E7%B8%A3';
+    fetchWeatherData(PenghuAPI, 'Penghu');
+    //金門 API
+    const kinmenAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E9%87%91%E9%96%80%E7%B8%A3';
+    fetchWeatherData(kinmenAPI, 'kinmen');
+    //澎湖 API
+    const MazuAPI = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-83F689C6-93AE-4B92-A1D6-708BDF769822&locationName=%E9%80%A3%E6%B1%9F%E7%B8%A3';
+    fetchWeatherData(MazuAPI, 'Mazu');
 </script>
 </html>
