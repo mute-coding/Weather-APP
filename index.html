@@ -67,10 +67,27 @@
             .then(data => {
                 const cityElement = document.getElementById(targetElementId);
                 const cityName = data.records.location[0].locationName;
+                const pop = parseInt(data.records.location[0].weatherElement.find(element => element.elementName === "PoP").time[0].parameter.parameterName);
+                 // 判斷PoP值，並插入相應的天氣圖片
+                 let weatherImageSrc = "";
+                if (pop >= 80) {
+                    weatherImageSrc = "images/rain.png";
+                } else if (pop >= 60) {
+                    weatherImageSrc = "images/mist.png";
+                } else if (pop >= 40) {
+                    weatherImageSrc = "images/cloud.png";
+                } else if (pop >= 20) {
+                    weatherImageSrc = "images/clear.png";
+                }
                 cityElement.innerHTML = `
                     <div class="city">${cityName}</div>
-                    <div class="today_T">今日溫度: ${data.records.location[0].weatherElement.find(element => element.elementName === "MaxT").time[0].parameter.parameterName}°C</div>
-                    <div class="today_INF">${data.records.location[0].weatherElement.find(element => element.elementName === "PoP").time[0].parameter.parameterName}</div>
+                    <div class="WT_img"><img src="${weatherImageSrc}" alt="Weather Image"></div>
+                    <div class="T_INF">今日溫度: </div>
+                    <div class="today_T">${data.records.location[0].weatherElement.find(element => element.elementName === "MaxT").time[0].parameter.parameterName}°C</div>
+                    <div class="INF_TODAY" >降雨機率:</div>
+                    <div class="INF_TODAY" >舒適度:</div>
+                    <div class="today_INF">${data.records.location[0].weatherElement.find(element => element.elementName === "PoP").time[0].parameter.parameterName}%</div>
+                    
                     <div class="today_INF">${data.records.location[0].weatherElement.find(element => element.elementName === "CI").time[0].parameter.parameterName}</div>
                 `;
             })
